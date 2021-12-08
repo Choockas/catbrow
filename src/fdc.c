@@ -4,13 +4,19 @@
 #include<unistd.h>
 #include<fcntl.h>
 #include"browfunc.h"
+#include<string.h>
+#include<sys/stat.h>
 #define EXIT(s) {fprintf(stderr,"%s",s);exit(0);}
+#define WBUFF 40
 
 
 int main(int argc, char* argv[])
 {
 	char buff[BUFSIZ];
+	char cbuff[WBUFF];
 	FILE *fp;
+	char *args[] = {"source","brs",NULL};	
+	long slen;
 	int spislength = 0;
 	char* resr;
 	if((fp = popen("ls */ -d", "r")) == NULL) EXIT("Error with pipes openning"); 
@@ -20,41 +26,33 @@ int main(int argc, char* argv[])
 	while(!feof(fp))
 	{
 //	printf("done o \n");
-	resr=fgets(buff, BUFSIZ, fp);
+	resr=fgets(cbuff,WBUFF, fp);
 		if(resr!=NULL)spislength++;
 	//	puts(buff);
 	}
-	char abuff[spislength][40];
+	char abuff[spislength][WBUFF];
 //	rewind(fp);
 	
     pclose(fp);
 	if((fp = popen("ls */ -d", "r")) == NULL) EXIT("Error with pipes openning"); 
 	for(int i=0;i<spislength;i++)
 	{
-		resr=fgets(abuff[i], 40, fp);
-	//	puts(abuff[i]);
+		resr=fgets(abuff[i],WBUFF, fp);
+		slen  = strlen(abuff[i]);
+		abuff[i][slen-1] = ' ';
 	}
    abuff[4][0]= '\n';
    abuff[4][1]= '\0';
 //
-	abuff[3][3]>>2;	
-	for(int i=0;i<spislength;++i)
-	{
-		printf("abuff[%d]=%s",i,abuff[i] );
-	}
-  fReadDirStream('a');
-//get directories names
-//
+   fGenMenu(abuff,spislength);
 
-//     call function do_ls (with argument or without)
-//
-
-
-// build array
-// generate script
-// pass control to script
     pclose(fp);
-	printf(" spislength : %d \n", spislength);
+	chmod("brs",S_IRWXU);
+	
 	printf("all done \n");
+	if(!execvp(args[0],args)){
+	printf("args[0]=%s \n",args[0]);
+	system("dbv");
+	}
 	return 0;
 }

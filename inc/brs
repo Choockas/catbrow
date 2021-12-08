@@ -1,0 +1,13 @@
+#! /bin/bash 
+mway=( drop ../ ) 
+select mw in ${mway[@]} 
+do 
+ case $mw in 
+drop) break;; 
+../) alias mycd='cd ../';; 
+*) break;; 
+esac 
+break 
+done 
+mycd 
+pwd

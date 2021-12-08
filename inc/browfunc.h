@@ -1,3 +1,3 @@
 #pragma once
 
-void fReadDirStream(char req );
+void fGenMenu(char(*pabuf)[40], int nuc );
